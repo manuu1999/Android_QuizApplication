@@ -28,7 +28,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_game);
         Intent i = getIntent();
         String userName = i.getStringExtra("userName");
-        ((TextView)findViewById(R.id.textView4)).setText(userName);
+        ((TextView)findViewById(R.id.textView4)).setText("Good luck with your Quiz " + userName + "!");
 
         totalQuestionsTextView = findViewById(R.id.total_question);
         questionTextView = findViewById(R.id.question);
