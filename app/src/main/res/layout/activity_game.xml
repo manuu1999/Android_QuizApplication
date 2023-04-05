@@ -9,6 +9,12 @@
     tools:context=".GameActivity">
 
     <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView" />
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/total_question"
@@ -81,7 +87,6 @@
         android:text="Submit"
         android:layout_below="@id/choices_layout"
         android:layout_marginTop="40dp"/>
-
 
 
 </RelativeLayout>

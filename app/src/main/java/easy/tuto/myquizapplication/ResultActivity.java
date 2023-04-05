@@ -2,6 +2,7 @@ package easy.tuto.myquizapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 
 public class ResultActivity extends AppCompatActivity {
@@ -11,4 +12,6 @@ public class ResultActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_result);
     }
+
+
 }
