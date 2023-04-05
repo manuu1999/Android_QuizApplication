@@ -8,6 +8,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class GameActivity extends AppCompatActivity implements View.OnClickListener{
@@ -94,6 +95,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+
     void finishQuiz(){
         String passStatus = "";
         if(score > totalQuestion*0.60){
@@ -102,20 +104,11 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
             passStatus = "Failed";
         }
 
-        new AlertDialog.Builder(this)
-                .setTitle(passStatus)
-                .setMessage("Score is "+ score+" out of "+ totalQuestion)
-                .setPositiveButton("Restart",(dialogInterface, i) -> restartQuiz() )
-                .setCancelable(false)
-                .show();
-
-
-    }
-
-    void restartQuiz(){
-        score = 0;
-        currentQuestionIndex =0;
-        loadNewQuestion();
+        Intent intent = new Intent(GameActivity.this, ResultActivity.class);
+        intent.putExtra("score", score);
+        intent.putExtra("passStatus", passStatus);
+        startActivity(intent);
+        finish();
     }
 
 }
