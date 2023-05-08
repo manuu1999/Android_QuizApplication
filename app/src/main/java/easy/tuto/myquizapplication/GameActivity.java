@@ -2,26 +2,31 @@ package easy.tuto.myquizapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
-public class GameActivity extends AppCompatActivity implements View.OnClickListener{
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
+public class GameActivity extends AppCompatActivity implements View.OnClickListener {
 
     TextView totalQuestionsTextView;
     TextView questionTextView;
     Button ansA, ansB, ansC, ansD;
     Button submitBtn;
 
-    int score=0;
-    int totalQuestion = QuestionAnswer.question.length;
+    int score = 0;
+    int totalQuestion = 6;
     int currentQuestionIndex = 0;
     String selectedAnswer = "";
+
+    String[] questions = new String[totalQuestion];
+    String[][] choices = new String[totalQuestion][4];
+    String[] correctAnswers = new String[totalQuestion];
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +35,8 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         Intent i = getIntent();
         String userName = i.getStringExtra("userName");
         ((TextView)findViewById(R.id.textView4)).setText("Good luck with your Quiz " + userName + "!");
+
+        // game start
 
         totalQuestionsTextView = findViewById(R.id.total_question);
         questionTextView = findViewById(R.id.question);
@@ -45,13 +52,28 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         ansD.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
 
-        totalQuestionsTextView.setText("Total questions : "+totalQuestion);
+        totalQuestionsTextView.setText("Total questions : " + totalQuestion);
 
-        loadNewQuestion();
+        retrieveDataAndParse();
 
+    }
 
-
-
+    private void retrieveDataAndParse() {
+        ApiDataRetriever.retrieveData(this,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        ApiDataParser.parseData(response, questions, choices, correctAnswers);
+                        loadNewQuestion();
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        error.printStackTrace();
+                    }
+                }
+        );
     }
 
     @Override
@@ -63,44 +85,44 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         ansD.setBackgroundColor(Color.WHITE);
 
         Button clickedButton = (Button) view;
-        if(clickedButton.getId()==R.id.submit_btn){
-            if(selectedAnswer.equals(QuestionAnswer.correctAnswers[currentQuestionIndex])){
+        if (clickedButton.getId() == R.id.submit_btn) {
+            if (selectedAnswer.equals(correctAnswers[currentQuestionIndex])) {
                 score++;
             }
             currentQuestionIndex++;
             loadNewQuestion();
 
 
-        }else{
+        } else {
             //choices button clicked
-            selectedAnswer  = clickedButton.getText().toString();
+            selectedAnswer = clickedButton.getText().toString();
             clickedButton.setBackgroundColor(Color.MAGENTA);
 
         }
 
     }
 
-    void loadNewQuestion(){
+    void loadNewQuestion() {
 
-        if(currentQuestionIndex == totalQuestion ){
+        if (currentQuestionIndex == totalQuestion) {
             finishQuiz();
             return;
         }
 
-        questionTextView.setText(QuestionAnswer.question[currentQuestionIndex]);
-        ansA.setText(QuestionAnswer.choices[currentQuestionIndex][0]);
-        ansB.setText(QuestionAnswer.choices[currentQuestionIndex][1]);
-        ansC.setText(QuestionAnswer.choices[currentQuestionIndex][2]);
-        ansD.setText(QuestionAnswer.choices[currentQuestionIndex][3]);
+        questionTextView.setText(questions[currentQuestionIndex]);
+        ansA.setText(choices[currentQuestionIndex][0]);
+        ansB.setText(choices[currentQuestionIndex][1]);
+        ansC.setText(choices[currentQuestionIndex][2]);
+        ansD.setText(choices[currentQuestionIndex][3]);
 
     }
 
 
-    void finishQuiz(){
+    void finishQuiz() {
         String passStatus = "";
-        if(score > totalQuestion*0.60){
+        if (score > totalQuestion * 0.60) {
             passStatus = "Passed";
-        }else{
+        } else {
             passStatus = "Failed";
         }
 

@@ -33,6 +33,11 @@ public class ResultActivity extends AppCompatActivity {
         Intent i = new Intent(this, GameActivity.class);
         startActivity(i);
     }
+
+    public void changePlayer(View view) {
+        Intent i = new Intent(this, MainActivity.class);
+        startActivity(i);
+    }
 }
 
 
