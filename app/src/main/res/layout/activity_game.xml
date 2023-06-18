@@ -9,13 +9,14 @@
     android:padding="24dp"
     tools:context=".GameActivity">
 
-    <TextView
+
+<TextView
         android:id="@+id/total_question"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:text="Total Questions "
-        android:textColor="@color/design_default_color_primary_variant"
+        android:textColor="#8A2BE2"
         android:textSize="16dp" />
 
 
@@ -35,7 +36,7 @@
         android:gravity="center"
         android:text="TextView"
         android:textAlignment="center"
-        android:textColor="@color/design_default_color_primary_variant"
+        android:textColor="#8A2BE2"
         android:textSize="18dp" />
 
     <TextView
@@ -49,7 +50,7 @@
         android:layout_marginBottom="20dp"
         android:text="This will be the question"
         android:textAlignment="center"
-        android:textColor="@color/design_default_color_primary_variant"
+        android:textColor="#8A2BE2"
         android:textSize="22dp"
         android:textStyle="bold" />
 
@@ -105,7 +106,8 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/choices_layout"
         android:layout_marginTop="40dp"
-        android:text="Submit" />
+        android:text="Submit"
+        android:backgroundTint="#8A2BE2" />
 
 
 </RelativeLayout>

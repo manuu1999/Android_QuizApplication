@@ -12,6 +12,10 @@ import android.widget.TextView;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 public class GameActivity extends AppCompatActivity implements View.OnClickListener {
 
     TextView totalQuestionsTextView;
@@ -52,7 +56,7 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         ansD.setOnClickListener(this);
         submitBtn.setOnClickListener(this);
 
-        totalQuestionsTextView.setText("Total questions : " + totalQuestion);
+        totalQuestionsTextView.setText("Question 1 out of " + totalQuestion);
 
         retrieveDataAndParse();
 
@@ -78,7 +82,6 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View view) {
-
         ansA.setBackgroundColor(Color.WHITE);
         ansB.setBackgroundColor(Color.WHITE);
         ansC.setBackgroundColor(Color.WHITE);
@@ -88,35 +91,146 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         if (clickedButton.getId() == R.id.submit_btn) {
             if (selectedAnswer.equals(correctAnswers[currentQuestionIndex])) {
                 score++;
+                // Highlight the correct answer button in green
+                highlightCorrectAnswer();
+            } else {
+                clickedButton.setBackgroundColor(Color.RED);
+                // Highlight the wrong answer button in red
+                highlightWrongAnswer();
             }
-            currentQuestionIndex++;
-            loadNewQuestion();
 
+            // Disable all answer buttons to prevent further selection
+            ansA.setEnabled(false);
+            ansB.setEnabled(false);
+            ansC.setEnabled(false);
+            ansD.setEnabled(false);
 
+            // Change the text of the submit button to "Next Question"
+            submitBtn.setText("Next Question");
+            submitBtn.setBackgroundColor(Color.parseColor("#8A2BE2"));
+            submitBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    currentQuestionIndex++;
+                    loadNewQuestion();
+                }
+            });
         } else {
-            //choices button clicked
+            // Choices button clicked
             selectedAnswer = clickedButton.getText().toString();
-            clickedButton.setBackgroundColor(Color.MAGENTA);
-
+            clickedButton.setBackgroundColor(Color.GRAY);
         }
-
     }
 
-    void loadNewQuestion() {
 
-        if (currentQuestionIndex == totalQuestion) {
+    void loadNewQuestion() {
+        if (currentQuestionIndex >= totalQuestion) {
             finishQuiz();
             return;
         }
 
-        questionTextView.setText(questions[currentQuestionIndex]);
-        ansA.setText(choices[currentQuestionIndex][0]);
-        ansB.setText(choices[currentQuestionIndex][1]);
-        ansC.setText(choices[currentQuestionIndex][2]);
-        ansD.setText(choices[currentQuestionIndex][3]);
+        totalQuestionsTextView.setText("Question " + (currentQuestionIndex + 1) + " out of " + totalQuestion);
 
+        questionTextView.setText(questions[currentQuestionIndex]);
+
+        // Randomly shuffle the order of the answer choices
+        List<String> answerChoices = Arrays.asList(choices[currentQuestionIndex]);
+        Collections.shuffle(answerChoices);
+
+        ansA.setText(answerChoices.get(0));
+        ansB.setText(answerChoices.get(1));
+        ansC.setText(answerChoices.get(2));
+        ansD.setText(answerChoices.get(3));
+
+        ansA.setBackgroundColor(Color.WHITE);
+        ansB.setBackgroundColor(Color.WHITE);
+        ansC.setBackgroundColor(Color.WHITE);
+        ansD.setBackgroundColor(Color.WHITE);
+
+        submitBtn.setText("Submit");
+        submitBtn.setBackgroundColor(Color.parseColor("#8A2BE2"));
+        submitBtn.setOnClickListener(this);
+
+        selectedAnswer = ""; // Reset selected answer
+
+        ansA.setEnabled(true);
+        ansB.setEnabled(true);
+        ansC.setEnabled(true);
+        ansD.setEnabled(true);
     }
 
+
+
+    void highlightWrongAnswer() {
+        // Get the index of the wrong answer
+        int wrongAnswerIndex = -1;
+        for (int i = 0; i < choices[currentQuestionIndex].length; i++) {
+            if (choices[currentQuestionIndex][i].equals(selectedAnswer)) {
+                wrongAnswerIndex = i;
+                break;
+            }
+        }
+
+        // Highlight the wrong answer button in red
+        switch (wrongAnswerIndex) {
+            case 0:
+                ansA.setBackgroundColor(Color.RED);
+                break;
+            case 1:
+                ansB.setBackgroundColor(Color.RED);
+                break;
+            case 2:
+                ansC.setBackgroundColor(Color.RED);
+                break;
+            case 3:
+                ansD.setBackgroundColor(Color.RED);
+                break;
+            default:
+                break;
+        }
+
+        // Highlight the correct answer button in green
+        int correctAnswerIndex = -1;
+        for (int i = 0; i < choices[currentQuestionIndex].length; i++) {
+            if (choices[currentQuestionIndex][i].equals(correctAnswers[currentQuestionIndex])) {
+                correctAnswerIndex = i;
+                break;
+            }
+        }
+
+        // Highlight the correct answer button in green
+        switch (correctAnswerIndex) {
+            case 0:
+                ansA.setBackgroundColor(Color.GREEN);
+                break;
+            case 1:
+                ansB.setBackgroundColor(Color.GREEN);
+                break;
+            case 2:
+                ansC.setBackgroundColor(Color.GREEN);
+                break;
+            case 3:
+                ansD.setBackgroundColor(Color.GREEN);
+                break;
+            default:
+                break;
+        }
+    }
+
+    void highlightCorrectAnswer() {
+        // Highlight the correct answer button in green
+        if (selectedAnswer.equals(correctAnswers[currentQuestionIndex])) {
+            if (selectedAnswer.equals(choices[currentQuestionIndex][0])) {
+                ansA.setBackgroundColor(Color.GREEN);
+            } else if (selectedAnswer.equals(choices[currentQuestionIndex][1])) {
+                ansB.setBackgroundColor(Color.GREEN);
+            } else if (selectedAnswer.equals(choices[currentQuestionIndex][2])) {
+                ansC.setBackgroundColor(Color.GREEN);
+            } else if (selectedAnswer.equals(choices[currentQuestionIndex][3])) {
+                ansD.setBackgroundColor(Color.GREEN);
+            }
+        }
+    }
 
     void finishQuiz() {
         String passStatus = "";
