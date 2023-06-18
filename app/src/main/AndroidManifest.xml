@@ -10,6 +10,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyQuizApplication">
+
+        <service android:name=".BackgroundMusicService" />
+
+
         <activity
             android:name=".ResultActivity"
             android:exported="false" />
@@ -30,3 +34,5 @@
     </application>
 
 </manifest>
+
+
