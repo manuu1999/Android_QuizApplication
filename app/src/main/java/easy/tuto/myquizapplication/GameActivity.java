@@ -243,8 +243,10 @@ public class GameActivity extends AppCompatActivity implements View.OnClickListe
         Intent intent = new Intent(GameActivity.this, ResultActivity.class);
         intent.putExtra("score", score);
         intent.putExtra("passStatus", passStatus);
+        intent.putExtra("userName", getIntent().getStringExtra("userName")); // Pass the username
         startActivity(intent);
         finish();
     }
+
 
 }

@@ -45,8 +45,10 @@ public class ResultActivity extends AppCompatActivity {
 
     public void restartQuiz(View view) {
         Intent i = new Intent(this, GameActivity.class);
+        i.putExtra("userName", getIntent().getStringExtra("userName")); // Pass the username
         startActivity(i);
     }
+
 
     public void changePlayer(View view) {
         Intent i = new Intent(this, MainActivity.class);
